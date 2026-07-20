@@ -39,7 +39,6 @@ modules:
           - it.mijorus.gearlever
 
   - type: script@v2
-    snippets:
-      - "curl https://raw.githubusercontent.com/aunetx/blur-my-shell/refs/heads/master/scripts/rounded_blur_build.sh | bash -s -- -i"
-
+    scripts:
+      - gnome-blur-round.sh
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
