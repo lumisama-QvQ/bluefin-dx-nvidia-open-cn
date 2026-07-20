@@ -34,7 +34,7 @@ modules:
       - scope: system
       - scope: user
         install:
-          - app.zen_bowser.zen
+          - app.zen_browser.zen
           - com.github.wwmm.easyeffects
           - it.mijorus.gearlever
 
