@@ -12,16 +12,15 @@ image-version: stable # latest is also supported if you want new updates ASAP
 # module configuration, executed in order
 # you can include multiple instances of the same module
 modules:
-  - type: files
-    files:
-      - source: system
-        destination: / # copies files/system/* (* means everything inside it) into your image's root folder /
-
   - type: dnf
     install:
       packages:
         - micro
         - helix
+        - ibus-rime
+        - librime
+        - nvim
+        - librime-lua
     remove:
       packages:
         # example: removing firefox (in favor of the flatpak)
@@ -32,11 +31,15 @@ modules:
   - type: default-flatpaks
     configurations:
       - notify: true # Send notification after install/uninstall is finished (true/false)
-        scope: system
-        # If no repo information is specified, Flathub will be used by default
-        install: # system flatpaks we want all users to have and not remove
-        remove: 
-          - org.mozilla.thunderbird_esr
-      - scope: user # Also add Flathub user repo, but no user packages
+      - scope: system
+      - scope: user
+        install:
+          - app.zen_bowser.zen
+          - com.github.wwmm.easyeffects
+          - it.mijorus.gearlever
+
+  - type: script@v2
+    snippets:
+      - "curl https://raw.githubusercontent.com/aunetx/blur-my-shell/refs/heads/master/scripts/rounded_blur_build.sh | bash -s -- -i"
 
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
