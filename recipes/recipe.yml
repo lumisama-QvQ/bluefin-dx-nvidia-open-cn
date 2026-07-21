@@ -24,5 +24,4 @@ modules:
   - type: script@v2
     scripts:
       - gnome-blur-round.sh
-      - clash-party.sh
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
