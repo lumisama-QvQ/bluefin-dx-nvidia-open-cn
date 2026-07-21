@@ -16,21 +16,10 @@ modules:
     install:
       packages:
         - micro
-        - helix
         - ibus-rime
         - librime
         - nvim
         - librime-lua
-
-  - type: default-flatpaks
-    configurations:
-      - notify: true # Send notification after install/uninstall is finished (true/false)
-      - scope: system
-      - scope: user
-        install:
-          - app.zen_browser.zen
-          - com.github.wwmm.easyeffects
-          - it.mijorus.gearlever
 
   - type: script@v2
     scripts:
