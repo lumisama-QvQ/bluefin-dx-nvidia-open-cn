@@ -24,4 +24,6 @@ modules:
   - type: script@v2
     scripts:
       - gnome-blur-round.sh
+    snippets:
+      - "curl https://chsrc.run/posix | sudo bash"
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
