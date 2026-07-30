@@ -1,40 +1,50 @@
-# BlueBuild Template &nbsp; [![bluebuild build badge](https://github.com/lumisama-qvq/bluefin-dx-nvidia-open-cn/actions/workflows/build.yml/badge.svg)](https://github.com/lumisama-qvq/bluefin-dx-nvidia-open-cn/actions/workflows/build.yml)
+# 我的定制化bluefin-dx-nvidia &nbsp; [![bluefin](https://github.com/lumisama-qvq/bluefin-dx-nvidia-open-cn/actions/workflows/build.yml/badge.svg)](https://github.com/lumisama-qvq/bluefin-dx-nvidia-open-cn/actions/workflows/build.yml)
 
-See the [BlueBuild docs](https://blue-build.org/how-to/setup/) for quick setup instructions for setting up your own repository based on this template.
+## 特色
 
-## Installation
+- [x] 使用[gnome-rounded-blur](https://github.com/kancko/gnome-rounded-blur)修复blur my shell在圆角模糊的问题
+- [x] 添加ibus-rime
+- [x] 优化bluefin-cli，方便用户自定义
+- [ ] 添加方便的国内源更换方法
+- [ ] 增加mihomo/mihomo-smart内核
 
-> [!WARNING]  
-> [This is an experimental feature](https://www.fedoraproject.org/wiki/Changes/OstreeNativeContainerStable), try at your own discretion.
+## 部署
 
-To rebase an existing atomic Fedora installation to the latest build:
+要在已安装ublue系的系统上变基到此镜像:
 
-- First rebase to the unsigned image, to get the proper signing keys and policies installed:
-  ```
+- 初次变基需要在非信任模式下部署，这会自动下载密钥:
+
+  ```sh
   rpm-ostree rebase ostree-unverified-registry:ghcr.io/lumisama-qvq/bluefin-dx-nvidia-open-cn:latest
   ```
-- Reboot to complete the rebase:
-  ```
+
+- 重启以完成变基:
+
+  ```sh
   systemctl reboot
   ```
-- Then rebase to the signed image, like so:
-  ```
+
+- 再次变基，并信任：
+  
+  ```sh
   rpm-ostree rebase ostree-image-signed:docker://ghcr.io/lumisama-qvq/bluefin-dx-nvidia-open-cn:latest
   ```
-- Reboot again to complete the installation
-  ```
+
+- 再次重启以完成部署
+
+  ```sh
   systemctl reboot
   ```
 
-The `latest` tag will automatically point to the latest build. That build will still always use the Fedora version specified in `recipe.yml`, so you won't get accidentally updated to the next major version.
+使用 `latest` 标签，保证每次更新均指向最新的镜像。目前镜像锁在Fedora 44版本，无需担心。
 
-## ISO
+## ISO文件
 
-If build on Fedora Atomic, you can generate an offline ISO with the instructions available [here](https://blue-build.org/how-to/generate-iso/#_top). These ISOs cannot unfortunately be distributed on GitHub for free due to large sizes, so for public projects something else has to be used for hosting.
+可在Fedora Atomic上构建，您可以使用这里提供的说明生成[脱机ISO](https://blue-build.org/how-to/generate-iso/#_top). 目前ISO文件过大，无法在GitHub上进行托管，用户暂时请以变基的方式使用本镜像。
 
-## Verification
+## 验证
 
-These images are signed with [Sigstore](https://www.sigstore.dev/)'s [cosign](https://github.com/sigstore/cosign). You can verify the signature by downloading the `cosign.pub` file from this repo and running the following command:
+镜像使用 [Sigstore](https://www.sigstore.dev/)'s [cosign](https://github.com/sigstore/cosign)签名. 您可以通过下载 `cosign.pub` 文件并运行下面命令来验证签名:
 
 ```bash
 cosign verify --key cosign.pub ghcr.io/lumisama-qvq/bluefin-dx-nvidia-open-cn
