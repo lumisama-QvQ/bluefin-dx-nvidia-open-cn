@@ -7,6 +7,7 @@
 - [x] 优化bluefin-cli，方便用户自定义
 - [ ] 添加方便的国内源更换方法
 - [ ] 增加mihomo/mihomo-smart内核
+- [ ] 优化gnome体验
 
 ## 部署
 
