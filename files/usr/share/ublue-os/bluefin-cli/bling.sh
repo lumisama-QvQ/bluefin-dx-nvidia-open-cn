@@ -24,11 +24,6 @@ if [ "$(command -v ug)" ]; then
     alias xzfgrep='ug -zF'
 fi
 
-# bat for cat
-if [ "$(command -v bat)" ]; then
-    alias cat='bat --style=plain --pager=never'
-fi
-
 # set ATUIN_INIT_FLAGS in your ~/.bashrc before ublue-bling is sourced.
 # Atuin allows these flags: "--disable-up-arrow" and/or "--disable-ctrl-r"
 ATUIN_INIT_FLAGS="${ATUIN_INIT_FLAGS:-}"
