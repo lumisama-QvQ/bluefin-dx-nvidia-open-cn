@@ -20,6 +20,7 @@ modules:
         - librime
         - helix
         - librime-lua
+
   - type: script@v2
     scripts:
       - gnome-blur-round.sh
