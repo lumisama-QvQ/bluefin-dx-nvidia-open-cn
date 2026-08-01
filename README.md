@@ -1,5 +1,7 @@
 # 我的定制化bluefin-dx-nvidia &nbsp; [![bluefin](https://github.com/lumisama-qvq/bluefin-dx-nvidia-open-cn/actions/workflows/build.yml/badge.svg)](https://github.com/lumisama-qvq/bluefin-dx-nvidia-open-cn/actions/workflows/build.yml)
 
+基于[ublue](https://universal-blue.org/)项目的[bluefin-dx-nvidia-open](https://github.com/ublue-os/bluefin/pkgs/container/bluefin-dx-nvidia-open)再开发
+
 ## 特色
 
 - [x] 使用[gnome-rounded-blur](https://github.com/kancko/gnome-rounded-blur)修复blur my shell在圆角模糊的问题
@@ -56,3 +58,7 @@
 ```bash
 cosign verify --key cosign.pub ghcr.io/lumisama-qvq/bluefin-dx-nvidia-open-cn
 ```
+
+-------
+
+感谢[bluebuild](https://blue-build.org/)提供优秀的模板和配置资料！
