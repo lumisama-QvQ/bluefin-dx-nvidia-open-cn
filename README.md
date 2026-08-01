@@ -39,6 +39,12 @@
 
 使用 `latest` 标签，保证每次更新均指向最新的镜像。目前镜像锁在Fedora 44版本，无需担心。
 
+### 针对国内用户网络的建议
+
+对于无法有效连接ghcr的，可尝试替换为国内镜像源（不保证可用）
+
+只需将`ghcr.io`替换成`ghcr.1ms.run`或者`ghcr.nju.edu.cn`
+
 ## ISO文件
 
 可在Fedora Atomic上构建，您可以使用这里提供的说明生成[脱机ISO](https://blue-build.org/how-to/generate-iso/#_top). 目前ISO文件过大，无法在GitHub上进行托管，用户暂时请以变基的方式使用本镜像。
