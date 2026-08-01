@@ -7,7 +7,23 @@ USER_BLING_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/bling"
 
 BLING_SCRIPT_SOURCE=""
 TARGET_CONFIG_FILE=""
-shell="$(basename "${SHELL}")"
+
+get_current_shell() {
+  local parent_cmd=""
+  if [ -r "/proc/$PPID/comm" ]; then
+    parent_cmd="$(cat "/proc/$PPID/comm")"
+  elif command -v ps >/dev/null 2>&1; then
+    parent_cmd="$(ps -p $PPID -o comm= 2>/dev/null)"
+  fi
+
+  parent_cmd="$(basename "${parent_cmd#-}")"
+
+  case "${parent_cmd}" in
+  bash | zsh | fish) echo "${parent_cmd}" ;;
+  *) basename "${SHELL:-bash}" ;;
+  esac
+}
+shell="$(get_current_shell)"
 case "${shell}" in
 "fish")
   BLING_SCRIPT_SOURCE="bling.fish"
@@ -45,7 +61,7 @@ BLING_MESSAGE_ENABLE="${BLING_MESSAGE_ENABLE:-Enable bling for ${shell}?}"
 BLING_MESSAGE_DISABLE="${BLING_MESSAGE_DISABLE:-Disable bling for ${shell}?}"
 
 if is-bling-installed "${shell}"; then
-  gum confirm "${BLING_MESSAGE_DISABLE}"
+  gum confirm "${BLING_MESSAGE_DISABLE}" || exit 0
 
   if [ -f "${TARGET_CONFIG_FILE}" ]; then
     sed -i "/### ${BLING_SCRIPT_SOURCE} source start/,/### ${BLING_SCRIPT_SOURCE} source end/d" "${TARGET_CONFIG_FILE}"
@@ -58,7 +74,7 @@ if is-bling-installed "${shell}"; then
 
   echo "Bling removed. Reopen your terminal so that the configurations may be removed."
 else
-  gum confirm "${BLING_MESSAGE_ENABLE}" --affirmative="Bling me up!" --negative "No, I'm boring"
+  gum confirm "${BLING_MESSAGE_ENABLE}" --affirmative="Bling me up!" --negative "No, I'm boring" || exit 0
 
   mkdir -p "${USER_BLING_DIR}"
   mkdir -p "$(dirname "${TARGET_CONFIG_FILE}")"
@@ -70,7 +86,7 @@ else
     exit 1
   fi
 
-  cp -f "${SOURCE_FILE}" "${USER_BLING_FILE}"
+  cp -i "${SOURCE_FILE}" "${USER_BLING_FILE}"
   echo "Copied ${BLING_SCRIPT_SOURCE} to ${USER_BLING_FILE}"
 
   echo "Adding source statement to $(basename "${TARGET_CONFIG_FILE}")"
@@ -80,6 +96,11 @@ else
 test -f "${USER_BLING_FILE}" && source "${USER_BLING_FILE}"
 ### ${BLING_SCRIPT_SOURCE} source end
 EOF
+
+  if [ -f "${BLING_CLI_DIRECTORY}/starship.toml" ]; then
+    echo "Adding starship.toml to .config"
+    cp -i "${BLING_CLI_DIRECTORY}/starship.toml" "${XDG_CONFIG_HOME:-$HOME/.config}/starship.toml"
+  fi
 
   echo "Installation complete. Reopen your terminal so that the configurations may be applied."
 fi
