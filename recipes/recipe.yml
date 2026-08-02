@@ -21,15 +21,15 @@ modules:
         - helix
         - librime-lua
 
+  - type: files
+    files:
+      - usr: /usr
+
   - type: script@v2
     scripts:
       - gnome-blur-round.sh
 
     snippets:
       - chmod +x /usr/bin/ublue-bling
-
-  - type: files
-    files:
-      - usr: /usr
 
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
