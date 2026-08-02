@@ -52,8 +52,7 @@ cn-mirror:
     set -euo pipefail
 
     ITEMS=(
-        "rpm-ostree  :  Fedora 软件源（影响 rpm-ostree install 分层安装）"
-        "dnf         :  Fedora 软件源（影响 dnf install / makecache）"
+        "rpm-ostree/dnf  :  Fedora 软件源"
         "flathub     :  Flatpak Flathub 应用商店源"
         "brew        :  Homebrew 镜像源（写入 ~/.config/environment.d/10-env.conf 的 HOMEBREW_* 两行）"
     )
@@ -134,11 +133,11 @@ cn-mirror:
             flathub*)
                 echo ">> 切换 Flathub 到 USTC 镜像..."
                 if flatpak remotes --system --columns=name 2>/dev/null | grep -qx "flathub"; then
-                    sudo flatpak remote-modify --system flathub --url="https://mirrors.ustc.edu.cn/flathub"
+                    sudo flatpak remote-modify --system flathub --url=https://mirrors.ustc.edu.cn/flathub
                     echo "系统级 flathub 已切换"
                 fi
                 if flatpak remotes --user --columns=name 2>/dev/null | grep -qx "flathub"; then
-                    flatpak remote-modify --user flathub --url="https://mirrors.ustc.edu.cn/flathub"
+                    flatpak remote-modify --user flathub --url=https://mirrors.ustc.edu.cn/flathub
                     echo "用户级 flathub 已切换"
                 fi
                 if ! flatpak remotes --system --columns=name 2>/dev/null | grep -qx "flathub" \
@@ -155,9 +154,8 @@ cn-mirror:
 
     echo
     echo "完成！"
-    echo "  - dnf / rpm-ostree：下次 install 自动走新源，也可立即 sudo dnf makecache 刷新缓存"
     echo "  - Flatpak：运行 flatpak update 拉取应用更新"
-    echo "  - Homebrew：重新登录后生效（已写入 ~/.config/environment.d/10-env.conf，与 shell 无关）"
+    echo "  - Homebrew：重新登录后生效"
     echo "如需还原官方源，运行：ujust cn-mirror-restore"
 
 # 还原软件源
@@ -166,43 +164,61 @@ cn-mirror-restore:
     #!/usr/bin/env bash
     set -euo pipefail
 
-    gum confirm "确认恢复官方软件源？" || { echo "已取消。"; exit 0; }
+    ITEMS=(
+        "rpm-ostree/dnf  :  Fedora 软件源（从 *.ustc.bak 备份还原）"
+        "flathub     :  Flatpak Flathub 应用商店源（还原为官方源）"
+        "brew        :  Homebrew 镜像源（从备份还原，无备份则写回官方默认）"
+    )
+    SELECTED="$(gum choose --no-limit --header "选择要还原为官方源的项（空格多选，回车确认）" "${ITEMS[@]}")"
+    [[ -n "$SELECTED" ]] || { echo "未选择任何项，已退出。"; exit 0; }
+
+    gum confirm "确认还原所选项为官方源？" || { echo "已取消。"; exit 0; }
     sudo -v
 
-    # 还原 Fedora 软件源（从 *.ustc.bak 备份恢复）
-    RESTORED=0
-    for bak in /etc/yum.repos.d/*.ustc.bak; do
-        [[ -e "$bak" ]] || continue
-        sudo mv -f "$bak" "${bak%.ustc.bak}"
-        RESTORED=1
-        echo "已还原 ${bak%.ustc.bak}"
-    done
-    [[ "$RESTORED" -eq 1 ]] || echo "未找到 Fedora 源备份（可能还没切换过）。"
-
-    # 还原 Flathub 为官方源
-    if flatpak remotes --system --columns=name 2>/dev/null | grep -qx "flathub"; then
-        sudo flatpak remote-modify --system flathub --url="https://dl.flathub.org/repo"
-        echo "系统级 flathub 已还原为官方源"
-    fi
-    if flatpak remotes --user --columns=name 2>/dev/null | grep -qx "flathub"; then
-        flatpak remote-modify --user flathub --url="https://dl.flathub.org/repo"
-        echo "用户级 flathub 已还原为官方源"
-    fi
-
-    # 还原 Homebrew 镜像源配置（优先从备份恢复，无备份则写回官方默认值）
-    ENV_CONF="${XDG_CONFIG_HOME:-$HOME/.config}/environment.d/10-env.conf"
-    if [[ -f "$ENV_CONF.ustc.bak" ]]; then
-        mv -f "$ENV_CONF.ustc.bak" "$ENV_CONF"
-        echo "已还原 brew 镜像源配置：$ENV_CONF"
-    elif [[ -f "$ENV_CONF" ]]; then
-        sed -i \
-            -e 's|^\(export[[:space:]]*\)\?HOMEBREW_API_DOMAIN=.*|HOMEBREW_API_DOMAIN="https://formulae.brew.sh/api"|' \
-            -e 's|^\(export[[:space:]]*\)\?HOMEBREW_BOTTLE_DOMAIN=.*|HOMEBREW_BOTTLE_DOMAIN="https://ghcr.io/v2/homebrew"|' \
-            "$ENV_CONF"
-        echo "已把 brew 两个变量还原为官方默认：$ENV_CONF"
-    else
-        echo "跳过：找不到 $ENV_CONF"
-    fi
+    while IFS= read -r choice; do
+        case "$choice" in
+            rpm-ostree* | dnf*)
+                echo ">> 还原 Fedora 软件源..."
+                # 从 *.ustc.bak 备份恢复
+                RESTORED=0
+                for bak in /etc/yum.repos.d/*.ustc.bak; do
+                    [[ -e "$bak" ]] || continue
+                    sudo mv -f "$bak" "${bak%.ustc.bak}"
+                    RESTORED=1
+                    echo "已还原 ${bak%.ustc.bak}"
+                done
+                [[ "$RESTORED" -eq 1 ]] || echo "未找到 Fedora 源备份（可能还没切换过）。"
+                ;;
+            flathub*)
+                echo ">> 还原 Flathub 为官方源..."
+                if flatpak remotes --system --columns=name 2>/dev/null | grep -qx "flathub"; then
+                    sudo flatpak remote-modify --system flathub --url="https://dl.flathub.org/repo"
+                    echo "系统级 flathub 已还原为官方源"
+                fi
+                if flatpak remotes --user --columns=name 2>/dev/null | grep -qx "flathub"; then
+                    flatpak remote-modify --user flathub --url="https://dl.flathub.org/repo"
+                    echo "用户级 flathub 已还原为官方源"
+                fi
+                ;;
+            brew*)
+                echo ">> 还原 Homebrew 镜像源..."
+                # 优先从备份恢复，无备份则写回官方默认值
+                ENV_CONF="${XDG_CONFIG_HOME:-$HOME/.config}/environment.d/10-env.conf"
+                if [[ -f "$ENV_CONF.ustc.bak" ]]; then
+                    mv -f "$ENV_CONF.ustc.bak" "$ENV_CONF"
+                    echo "已还原 brew 镜像源配置：$ENV_CONF"
+                elif [[ -f "$ENV_CONF" ]]; then
+                    sed -i \
+                        -e 's|^\(export[[:space:]]*\)\?HOMEBREW_API_DOMAIN=.*|HOMEBREW_API_DOMAIN="https://formulae.brew.sh/api"|' \
+                        -e 's|^\(export[[:space:]]*\)\?HOMEBREW_BOTTLE_DOMAIN=.*|HOMEBREW_BOTTLE_DOMAIN="https://ghcr.io/v2/homebrew"|' \
+                        "$ENV_CONF"
+                    echo "已把 brew 两个变量还原为官方默认：$ENV_CONF"
+                else
+                    echo "跳过：找不到 $ENV_CONF"
+                fi
+                ;;
+        esac
+    done <<< "$SELECTED"
 
     echo
-    echo "已恢复官方源。建议运行：sudo dnf makecache && flatpak update"
+    echo "完成！建议运行：sudo dnf makecache && flatpak update"
