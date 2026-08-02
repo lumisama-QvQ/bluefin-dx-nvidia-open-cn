@@ -3,7 +3,8 @@
 # 挂载位置由 bluefin 基镜像的 00-entry.just 通过 `import? "/usr/share/ublue-os/just/60-custom.just"` 自动引入
 
 # 一键从 GitHub 安装/更新 雾凇拼音 (rime-ice) 到 ibus-rime 用户配置目录
-# 用户目录默认 ~/.config/ibus/rime；可通过环境变量 RIME_USER_DIR 覆盖
+
+# 默认安装ice至 ~/.config/ibus/rime；可通过 RIME_USER_DIR 覆盖
 [group('CN')]
 rime-ice:
     #!/usr/bin/env bash
@@ -44,7 +45,7 @@ rime-ice:
     echo "已安装到 ${RIME_DIR}"
     echo "请在输入法设置中重新部署（托盘图标 → 部署 / F4 → Deploy），或运行 ibus restart"
 
-# 一键把系统软件源切换到中科大 (USTC) 镜像，可选 rpm-ostree / dnf / Flatpak Flathub / Homebrew
+# 切换到中科大镜像
 [group('CN')]
 cn-mirror:
     #!/usr/bin/env bash
@@ -159,7 +160,7 @@ cn-mirror:
     echo "  - Homebrew：重新登录后生效（已写入 ~/.config/environment.d/10-env.conf，与 shell 无关）"
     echo "如需还原官方源，运行：ujust cn-mirror-restore"
 
-# 一键还原 cn-mirror 切换前的官方源（rpm-ostree / dnf / Flathub / Homebrew）
+# 还原软件源
 [group('CN')]
 cn-mirror-restore:
     #!/usr/bin/env bash
