@@ -52,8 +52,7 @@ cn-mirror:
     set -euo pipefail
 
     ITEMS=(
-        "rpm-ostree  :  Fedora 软件源（影响 rpm-ostree install 分层安装）"
-        "dnf         :  Fedora 软件源（影响 dnf install / makecache）"
+        "rpm-ostree/dnf  :  Fedora 软件源"
         "flathub     :  Flatpak Flathub 应用商店源"
         "brew        :  Homebrew 镜像源（写入 ~/.config/environment.d/10-env.conf 的 HOMEBREW_* 两行）"
     )
@@ -134,11 +133,11 @@ cn-mirror:
             flathub*)
                 echo ">> 切换 Flathub 到 USTC 镜像..."
                 if flatpak remotes --system --columns=name 2>/dev/null | grep -qx "flathub"; then
-                    sudo flatpak remote-modify --system flathub --url="https://mirrors.ustc.edu.cn/flathub"
+                    sudo flatpak remote-modify --system flathub --url=https://mirrors.ustc.edu.cn/flathub
                     echo "系统级 flathub 已切换"
                 fi
                 if flatpak remotes --user --columns=name 2>/dev/null | grep -qx "flathub"; then
-                    flatpak remote-modify --user flathub --url="https://mirrors.ustc.edu.cn/flathub"
+                    flatpak remote-modify --user flathub --url=https://mirrors.ustc.edu.cn/flathub
                     echo "用户级 flathub 已切换"
                 fi
                 if ! flatpak remotes --system --columns=name 2>/dev/null | grep -qx "flathub" \
@@ -155,9 +154,8 @@ cn-mirror:
 
     echo
     echo "完成！"
-    echo "  - dnf / rpm-ostree：下次 install 自动走新源，也可立即 sudo dnf makecache 刷新缓存"
     echo "  - Flatpak：运行 flatpak update 拉取应用更新"
-    echo "  - Homebrew：重新登录后生效（已写入 ~/.config/environment.d/10-env.conf，与 shell 无关）"
+    echo "  - Homebrew：重新登录后生效"
     echo "如需还原官方源，运行：ujust cn-mirror-restore"
 
 # 还原软件源
