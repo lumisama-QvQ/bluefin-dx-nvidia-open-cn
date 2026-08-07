@@ -17,14 +17,12 @@ modules:
       cleanup: true
       copr:
       - scottames/ghostty
-      - monkeygold/nautilus-open-any-terminal
     install:
       packages:
         - micro
         - ibus-rime
         - librime
         - librime-lua
-        - nautilus-open-any-terminal
         - ghostty
 
   - type: files
