@@ -19,7 +19,7 @@ modules:
         - ibus-rime
         - librime
         - librime-lua
-        - kitty
+        - ghostty
 
   - type: files
     files:
