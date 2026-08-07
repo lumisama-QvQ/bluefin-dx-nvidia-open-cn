@@ -20,6 +20,7 @@ modules:
         - librime
         - helix
         - librime-lua
+        - kitty
 
   - type: files
     files:

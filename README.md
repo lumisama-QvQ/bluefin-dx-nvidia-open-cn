@@ -16,10 +16,10 @@
 
 镜像内置了自定义 `ujust` 配方（挂载在 `[CN]` 分组下），使用 `ujust --list` 可查看：
 
-- **`ujust rime-ice`** — 一键从 GitHub 下载 [rime-ice](https://github.com/iDvel/rime-ice) 最新版 `full.zip` 并安装/更新到 ibus-rime 用户配置目录（默认 `~/.config/ibus/rime`），仅覆盖配置和词库文件，不会动你的 `*.custom.yaml`。安装完成后在输入法里重新部署即可。
+- **`ujust rime-ice`** — 一键从 GitHub 下载 [rime-ice](https://github.com/iDvel/rime-ice) 最新版 `full.zip` 并安装/更新到 ibus-rime 用户配置目录（默认 `~/.config/ibus/rime`），仅覆盖配置和词库文件,因此也可作为更新手段。安装完成后在输入法里重新部署即可。
   - 环境变量：`RIME_USER_DIR`（自定义目录，如 fcitx5 用 `~/.local/share/fcitx5/rime`）、`RIME_ICE_MIRROR`（国内下载镜像前缀，如 `https://ghproxy.com/`）。
-- **`ujust cn-mirror`** — 一键把系统软件源切换到中科大 (USTC) 镜像，交互式多选（空格选中、回车确认）要替换的源：
-  - `rpm-ostree` / `dnf` — Fedora 软件源（两者共用 `/etc/yum.repos.d/`，切换后 `rpm-ostree install` 分层安装与 `dnf` 安装/更新都走国内源）
+- **`ujust cn-mirror`** — 一键把系统软件源切换到中科大 (USTC) 镜像
+  - `rpm-ostree` / `dnf` — Fedora 软件源（两者共用 `/etc/yum.repos.d/`
   - `flathub` — Flatpak 应用商店源（随后运行 `flatpak update` 生效）
   - `brew` — Homebrew 镜像源（把 `HOMEBREW_API_DOMAIN` / `HOMEBREW_BOTTLE_DOMAIN` 两个变量写入 `~/.config/environment.d/10-env.conf`，与所用 shell 无关，重新登录后生效）
   
