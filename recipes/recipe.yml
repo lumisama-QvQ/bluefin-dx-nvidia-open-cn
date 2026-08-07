@@ -12,10 +12,6 @@ image-version: stable # latest is also supported if you want new updates ASAP
 # module configuration, executed in order
 # you can include multiple instances of the same module
 modules:
-  - type: script@v2
-    snippets:
-      - sudo wget https://copr.fedorainfracloud.org/coprs/wezfurlong/wezterm-nightly/repo/fedora-$(rpm -E %fedora)/wezfurlong-wezterm-nightly-fedora-$(rpm -E %fedora).repo -O /etc/yum.repos.d/_copr:copr.fedorainfracloud.org:wezfurlong:wezterm-nightly.repo
-      
   - type: dnf
     install:
       packages:
@@ -24,7 +20,6 @@ modules:
         - librime
         - helix
         - librime-lua
-        - wezterm
 
   - type: files
     files:
