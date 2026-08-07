@@ -13,12 +13,18 @@ image-version: stable # latest is also supported if you want new updates ASAP
 # you can include multiple instances of the same module
 modules:
   - type: dnf
+    repos:
+      cleanup: true
+      copr:
+      - scottames/ghostty
     install:
       packages:
         - micro
         - ibus-rime
         - librime
         - librime-lua
+        - nautilus-python
+        - ghostty
 
   - type: files
     files:
