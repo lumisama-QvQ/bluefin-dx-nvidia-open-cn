@@ -17,7 +17,6 @@ modules:
       cleanup: true
       copr:
       - scottames/ghostty
-      - monkeygold/nautilus-open-any-terminal
     install:
       packages:
         - micro
@@ -25,7 +24,6 @@ modules:
         - librime
         - helix
         - librime-lua
-        - nautilus-open-any-terminal
         - ghostty
 
   - type: files
