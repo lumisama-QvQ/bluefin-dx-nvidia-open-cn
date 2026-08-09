@@ -9,7 +9,7 @@ if status is-interactive
 
     # ls aliases
     if type -q eza
-        __bling_abbr ll 'eza -l --icons=auto --group-directories-first'
+        __bling_abbr ll 'eza -Tlah --level 1 --icons=auto --group-directories-first'
         __bling_abbr l. 'eza -d .*'
         __bling_abbr ls eza
         __bling_abbr l1 'eza -1'
