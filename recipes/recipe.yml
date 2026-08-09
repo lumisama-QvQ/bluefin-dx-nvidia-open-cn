@@ -25,6 +25,7 @@ modules:
         - helix
         - librime-lua
         - ghostty
+        - dash
 
   - type: files
     files:
@@ -36,5 +37,6 @@ modules:
 
     snippets:
       - chmod +x /usr/bin/ublue-bling
+      - ln -sf /bin/dash /bin/sh
 
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
